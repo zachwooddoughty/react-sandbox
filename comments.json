@@ -1,0 +1,30 @@
+[
+    {
+        "text": "This is one comment",
+        "author": "Pete Hunt"
+    },
+    {
+        "text": "This is *another* comment",
+        "author": "Jordan Walke"
+    },
+    {
+        "text": "Testing",
+        "author": "Zach"
+    },
+    {
+        "text": "I love leetle leezards",
+        "author": "Milana"
+    },
+    {
+        "text": "So do I!",
+        "author": "Zach"
+    },
+    {
+        "text": "Oh yay",
+        "author": "Milana"
+    },
+    {
+        "text": "I love you too",
+        "author": "Zach"
+    }
+]

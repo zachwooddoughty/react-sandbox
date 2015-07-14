@@ -6,11 +6,100 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
   </head>
   <body>
     <div id="content"></div>
     <script type="text/jsx">
-      // Your code here
+        var data = [
+          {posterName: "Eddy Chan", posterBio: "I like to read historical non-fiction and think about the big picture",
+           posterImage: "https://media.licdn.com/mpr/mpr/shrinknp_400_400/p/2/000/086/153/2654332.jpg",
+           summary: "The Cairo streets where girls pretend to be boys",
+           image: "http://i.guim.co.uk/img/static/sys-images/Guardian/Pix/pictures/2015/7/8/1436351410983/The-wide-eyed-bewildered--009.jpg?w=700&q=85&auto=format&sharp=10&s=3acf83df15672f919e5ecf408b980be6",
+           text: "This is a tragic but interesting juxtaposition of gender and poverty. Amira El Feky, a former academic who has researched this topic, explains: 'All the privileges that men have -- they can have them. They mock the whole idea of gender, they say: 'Oh you think women are weak? Well I'm just not going to be a woman any more.''"},
+          {posterName: "Tina Koenig", posterBio: "Chemistry teacher; Mother",
+           posterImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-a7RKRcNXsuNBn5wM97xvZn65Uw8EKkhsMyP8unyhc967wRdj2w",
+           summary: "Lenin's Body Improves with Age",
+           image: "http://www.scientificamerican.com/sciam/cache/file/7A3E39F2-2EAD-4EE4-94747F056F593160_article.jpg?F9BDE",
+           text: "Generations of Russian scientists have spent almost a century fine-tuning preservation techniques that have maintained the look, feel and flexibility of Lenin's body."}
+        ];
+
+        var PostTileList = React.createClass({
+          render: function(){
+            var postTiles = this.props.posts.map(function (post, i){
+              return <PostTile post={post} key={i}/>;
+            });
+            return (
+              <div className="postTileList">
+                {postTiles}
+              </div>
+            );
+          }
+        });
+
+        var PostTile = React.createClass({
+          getInitialState: function(){
+            return {expanded: false};
+          },
+          expand: function(){
+            this.setState({expanded: !this.state.expanded});
+          },
+          render: function() {
+            var bonusText = this.props.post.text;
+            for (i = 0; i < 3; i++){
+                bonusText += " " + bonusText;
+            }
+            return (
+              <div className="postTile" style={{border: '2px black solid'}} >
+                <img src={this.props.post.posterImage} width='48px' height='48px' />
+                {this.props.post.posterName + ": " + this.props.post.posterBio}
+                <h1>{this.props.post.summary}</h1>
+                <br />
+                <div style={{padding: '10px', border: '1px', overflow: 'hidden',}}>
+                  <img src={this.props.post.image}  style={{maxWidth: '400px', float: 'left', marginRight: '15px'}} />
+                  <p>{this.props.post.text}</p>
+                  {
+                    this.state.expanded ?
+                    <div><p>{bonusText}</p><p><button onClick={this.expand}>Collapse</button></p></div> :
+                    <p><button onClick={this.expand}>Read more</button></p>
+                  }
+                </div>
+              </div>
+            );
+          }
+        });
+
+        var App = React.createClass({
+          getInitialState: function(){
+            return {tabs: ['read', 'write', 'search', 'settings'], currentTab: 'read'};
+          },
+          changeTab: function(newTab){
+            this.setState({currentTab: newTab});
+            console.log("current tab is: " + newTab);
+          },
+          render: function(){
+            return (
+              <div className='app'>
+                {this.state.tabs.map(function(tab){
+                  return (<button onClick={this.changeTab.bind(this, tab)} key={tab}>{tab}</button>);
+                }, this)}
+                {this.state.currentTab === 'read' ?
+                  <PostTileList posts={data} /> :
+                  null
+                }
+                {this.state.currentTab === 'write' ?
+                  <p>Write a post!</p> :
+                  null
+                }
+              </div>
+            )
+          },
+        });
+
+        React.render(
+          <App />,
+          document.getElementById('content')
+        );
     </script>
   </body>
 </html>
