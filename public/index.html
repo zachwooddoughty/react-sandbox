@@ -1,160 +1,127 @@
-<!-- index.html -->
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <title>React Sandbox</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+    <meta charset=utf-8>
+    <title>Infinity Demo: On</title>
+    <link rel=stylesheet type=text/css href=assets/o2.css>
+    <link rel=stylesheet type=text/css href=assets/custom.css>
   </head>
   <body>
-    <div id="content"></div>
-    <script type="text/jsx">
-        var PostTileList = React.createClass({
-          render: function(){
-            var postTiles = this.props.posts.map(function (post, i){
-              return <PostTile post={post} key={i}/>;
-            });
-            return (
-              <div className="postTileList">
-                {postTiles}
-              </div>
-            );
-          }
-        });
+    <div class='container main-container'> 
+      <div id=demo class=row>
 
-        var PostTile = React.createClass({
-          getInitialState: function(){
-            return {expanded: false};
-          },
-          expand: function(){
-            this.setState({expanded: !this.state.expanded});
-          },
-          render: function() {
-            var bonusText = this.props.post.text;
-            for (i = 0; i < 3; i++){
-                bonusText += " " + bonusText;
-            }
-            return (
-              <div className="postTile" style={{border: '2px black solid'}} >
-                <img src={this.props.post.posterImage} width='48px' height='48px' />
-                {this.props.post.posterName + ": " + this.props.post.posterBio}
-                <h1>{this.props.post.summary}</h1>
-                <br />
-                <div style={{padding: '10px', border: '1px', overflow: 'hidden',}}>
-                  <img src={this.props.post.image}  style={{maxWidth: '400px', float: 'left', marginRight: '15px'}} />
-                  <p>{this.props.post.text}</p>
-                  {
-                    this.state.expanded ?
-                    <div><p>{bonusText}</p><p><button onClick={this.expand}>Collapse</button></p></div> :
-                    <p><button onClick={this.expand}>Read more</button></p>
-                  }
-                </div>
-              </div>
-            );
-          }
-        });
-        var PostForm = React.createClass({
-          handleSubmit: function(e) {
-            e.preventDefault();
-            var posterName = React.findDOMNode(this.refs.author).value.trim();
-            var posterBio = "A visitor to this lovely site";
-            var posterImage = "http://images.clipartpanda.com/laughing-smiley-face-clip-art-smiley-face-clip-art10.jpeg";
-            var text = React.findDOMNode(this.refs.text).value.trim();
-            var summary = text.substring(0, 100);
-            if (!text || !posterName){
-              return;
-            }
-            this.props.onPostSubmit({
-                posterName: posterName, posterBio: posterBio, posterImage: posterImage,
-                summary: summary, text: text,
-            });
-            React.findDOMNode(this.refs.author).value = '';
-            React.findDOMNode(this.refs.text).value = '';
-            return;
-          },
-          render: function() {
-            return (
-              <div className="postForm">
-                <form className="postForm" onSubmit={this.handleSubmit} >
-                  <input type="text" ref="author" placeholder="Your name" />
-                  <input type="text" ref="text" placeholder="Say something..." />
-                  <input type="submit" value="Post" />
-                </form>
-              </div>
-            );
-          }
-        });    
+        <div class='span12 list-view'>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class='modal fade' id=save-modal>
+      <div class=modal-header>
+        <a href=# class=close>&times;</a>
+        <h1>Save To Puglist?</h1>
+      </div>
+      <div class=modal-body>
+        <p>Are you sure you want to save this to your puglist?</p>
+      </div>
+      <div class=modal-footer>
+        <a class='save btn' href=#>Yes</a>
+        <a class='no-save red btn' href=#>No</a>
+      </div>
+    </div>
 
 
-        var App = React.createClass({
-          getInitialState: function(){
-            return {tabs: ['read', 'write', 'search', 'settings'], currentTab: 'read', posts: []};
-          },
-          loadPostsFromServer: function(){
-            $.ajax({
-              url: 'comments.json',
-              dataType: 'json',
-              cache: false,
-              success: function(data) {
-                this.setState({posts: data});
-              }.bind(this),
-              error: function(xhr, status, err) {
-                console.error('comments.json', status, err.toString());
-              }.bind(this)
-            }); 
-          },
-          handlePostSubmit: function(newPost){
-            var posts = this.state.posts;
-            console.log(posts);
-            posts.unshift(newPost);
-            console.log(posts);
-            this.setState({posts: posts, currentTab: 'read'});
+    <script type=text/html id=demo-pug-template>
+      <div class='pug-item'>
+        <div class='matte-media-box pug-box'
+          data-pug="<%= pug.src %>"
+          data-name="<%= title %>"
+          data-caption="<%= caption %>"
+        >
+          <% intendedSize = 800 %>
+          <% scale = (intendedSize - 10) / pug.width %>
+          <img class='pug' data-original="<%= pug.src %>" 
+                style="width: <%= pug.width * scale %>px;
+                      height: <%= pug.height * scale %>px;">
 
-            $.ajax({
-              url: 'comments.json',
-              dataType: 'json',
-              type: 'POST',
-              data: newPost,
-              success: function(data) {
-                this.setState({posts: data});
-              }.bind(this),
-              error: function(xhr, status, err) {
-                console.error(this.props.url, status, err.toString());
-              }.bind(this)
-            });
-          },
-          componentDidMount: function(){
-            this.loadPostsFromServer();
-            setInterval(this.loadPostsFromServer, 20000);
-          },
-          changeTab: function(newTab){
-            this.setState({currentTab: newTab});
-          },
-          render: function(){
-            return (
-              <div className='app'>
-                {this.state.tabs.map(function(tab){
-                  return (<button onClick={this.changeTab.bind(this, tab)} key={tab}>{tab}</button>);
-                }, this)}
-                {this.state.currentTab === 'read' ?
-                  <PostTileList posts={this.state.posts} /> :
-                  null
-                }
-                {this.state.currentTab === 'write' ?
-                  <PostForm onPostSubmit={this.handlePostSubmit} /> :
-                  null
-                }
-              </div>
-            )
-          },
-        });
-
-        React.render(
-          <App />,
-          document.getElementById('content')
-        );
+          <div class=caption>
+            <h4 class=caption-name><%= title %></h4>
+            <p class=caption-text><%= caption %></p>
+          </div>
+        </div>
+      </div>
     </script>
+
+    <script type=text/html id=demo-double-pug-template>
+      <div class='pug-item'>
+        <div class='double-pug-box'
+          data-pug1="<%= pug1.src %>"
+          data-name1="<%= title1 %>"
+          data-caption1="<%= caption1 %>"
+          data-pug2="<%= pug2.src %>"
+          data-name2="<%= title2 %>"
+          data-caption2="<%= caption2 %>"
+        >
+          <% intendedSize = 400 %>
+          <% scale = (intendedSize - 10) / pug1.width %>
+          <table>
+            <tr>
+            <td class='matte-media-box'>
+            <img class='pug' data-original="<%= pug1.src %>" 
+                  style="width: <%= pug1.width * scale %>px;
+                        height: <%= pug1.height * scale %>px;">
+
+            <div class=caption>
+              <h4 class=caption-name><%= title1 %></h4>
+              <p class=caption-text><%= caption1 %></p>
+            </div>
+            </td>
+            <td class='matte-media-box'>
+            <% scale = (intendedSize - 10) / pug2.width %>
+            <img class='pug' data-original="<%= pug2.src %>" 
+                  style="width: <%= pug2.width * scale %>px;
+                        height: <%= pug2.height * scale %>px;">
+
+            <div class=caption>
+              <h4 class=caption-name><%= title2 %></h4>
+              <p class=caption-text><%= caption2 %></p>
+            </div>
+            </td>
+            </tr>
+        </table>
+        </div>
+      </div>
+    </script>
+
+    <script type=text/html id=spinner-template>
+      <div class=row>
+        <div class=span12>
+          <img src=assets/images/icons/spinner.gif class=spinner alt='Loading...'>
+        </div>
+      </div>
+    </script>
+
+    <script type=text/javascript src=https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js></script>
+    <script type=text/javascript src=assets/js/vendor/ender.min.js></script>
+    <script>ender.noConflict();</script>
+    <script type=text/javascript src=assets/js/vendor/stdair.min.js></script>
+    <script type=text/javascript src=assets/js/vendor/o2.min.js></script>
+
+    <script type=text/javascript src=infinity.js></script>
+
+    <script type=text/javascript src=assets/js/demo/demo-package.js></script>
+    <script type=text/javascript>
+      Pug.config = {
+        infinityOn: true
+      };
+    </script>
+    <script type=text/javascript src=assets/js/demo/pugs.js></script>
+    <script type=text/javascript src=assets/js/demo/names.js></script>
+    <script type=text/javascript src=assets/js/demo/taglines.js></script>
+    <script type=text/javascript src=assets/js/demo/storage.js></script>
+    <script type=text/javascript src=assets/js/demo/render.js></script>
+    <script type=text/javascript src=assets/js/demo/index.js></script>
   </body>
 </html>
+

@@ -1,0 +1,160 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Sandbox</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+  </head>
+  <body>
+    <div id="content"></div>
+    <script type="text/jsx">
+        var PostTileList = React.createClass({
+          render: function(){
+            var postTiles = this.props.posts.map(function (post, i){
+              return <PostTile post={post} key={i}/>;
+            });
+            return (
+              <div className="postTileList">
+                {postTiles}
+              </div>
+            );
+          }
+        });
+
+        var PostTile = React.createClass({
+          getInitialState: function(){
+            return {expanded: false};
+          },
+          expand: function(){
+            this.setState({expanded: !this.state.expanded});
+          },
+          render: function() {
+            var bonusText = this.props.post.text;
+            for (i = 0; i < 3; i++){
+                bonusText += " " + bonusText;
+            }
+            return (
+              <div className="postTile" style={{border: '2px black solid'}} >
+                <img src={this.props.post.posterImage} width='48px' height='48px' />
+                {this.props.post.posterName + ": " + this.props.post.posterBio}
+                <h1>{this.props.post.summary}</h1>
+                <br />
+                <div style={{padding: '10px', border: '1px', overflow: 'hidden',}}>
+                  <img src={this.props.post.image}  style={{maxWidth: '400px', float: 'left', marginRight: '15px'}} />
+                  <p>{this.props.post.text}</p>
+                  {
+                    this.state.expanded ?
+                    <div><p>{bonusText}</p><p><button onClick={this.expand}>Collapse</button></p></div> :
+                    <p><button onClick={this.expand}>Read more</button></p>
+                  }
+                </div>
+              </div>
+            );
+          }
+        });
+        var PostForm = React.createClass({
+          handleSubmit: function(e) {
+            e.preventDefault();
+            var posterName = React.findDOMNode(this.refs.author).value.trim();
+            var posterBio = "A visitor to this lovely site";
+            var posterImage = "http://images.clipartpanda.com/laughing-smiley-face-clip-art-smiley-face-clip-art10.jpeg";
+            var text = React.findDOMNode(this.refs.text).value.trim();
+            var summary = text.substring(0, 100);
+            if (!text || !posterName){
+              return;
+            }
+            this.props.onPostSubmit({
+                posterName: posterName, posterBio: posterBio, posterImage: posterImage,
+                summary: summary, text: text,
+            });
+            React.findDOMNode(this.refs.author).value = '';
+            React.findDOMNode(this.refs.text).value = '';
+            return;
+          },
+          render: function() {
+            return (
+              <div className="postForm">
+                <form className="postForm" onSubmit={this.handleSubmit} >
+                  <input type="text" ref="author" placeholder="Your name" />
+                  <input type="text" ref="text" placeholder="Say something..." />
+                  <input type="submit" value="Post" />
+                </form>
+              </div>
+            );
+          }
+        });    
+
+
+        var App = React.createClass({
+          getInitialState: function(){
+            return {tabs: ['read', 'write', 'search', 'settings'], currentTab: 'read', posts: []};
+          },
+          loadPostsFromServer: function(){
+            $.ajax({
+              url: 'comments.json',
+              dataType: 'json',
+              cache: false,
+              success: function(data) {
+                this.setState({posts: data});
+              }.bind(this),
+              error: function(xhr, status, err) {
+                console.error('comments.json', status, err.toString());
+              }.bind(this)
+            }); 
+          },
+          handlePostSubmit: function(newPost){
+            var posts = this.state.posts;
+            console.log(posts);
+            posts.unshift(newPost);
+            console.log(posts);
+            this.setState({posts: posts, currentTab: 'read'});
+
+            $.ajax({
+              url: 'comments.json',
+              dataType: 'json',
+              type: 'POST',
+              data: newPost,
+              success: function(data) {
+                this.setState({posts: data});
+              }.bind(this),
+              error: function(xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+              }.bind(this)
+            });
+          },
+          componentDidMount: function(){
+            this.loadPostsFromServer();
+            setInterval(this.loadPostsFromServer, 20000);
+          },
+          changeTab: function(newTab){
+            this.setState({currentTab: newTab});
+          },
+          render: function(){
+            return (
+              <div className='app'>
+                {this.state.tabs.map(function(tab){
+                  return (<button onClick={this.changeTab.bind(this, tab)} key={tab}>{tab}</button>);
+                }, this)}
+                {this.state.currentTab === 'read' ?
+                  <PostTileList posts={this.state.posts} /> :
+                  null
+                }
+                {this.state.currentTab === 'write' ?
+                  <PostForm onPostSubmit={this.handlePostSubmit} /> :
+                  null
+                }
+              </div>
+            )
+          },
+        });
+
+        React.render(
+          <App />,
+          document.getElementById('content')
+        );
+    </script>
+  </body>
+</html>

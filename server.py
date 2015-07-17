@@ -10,12 +10,16 @@
 
 import json
 import os
-from flask import Flask, Response, request
+from flask import Flask, Response, request, send_from_directory
 
-app = Flask(__name__, static_url_path='', static_folder='public')
+app = Flask(__name__, static_url_path='', static_folder='')
 app.debug = True
-app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
+app.add_url_rule('/', 'root', lambda: app.send_static_file('demo-on.html'))
 
+
+@app.route('/inf')
+def inf():
+    return send_from_directory('', 'demo-on.html')
 
 @app.route('/comments.json', methods=['GET', 'POST'])
 def comments_handler():
