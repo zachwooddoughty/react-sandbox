@@ -1,30 +1,39 @@
 [
     {
-        "text": "This is one comment",
-        "author": "Pete Hunt"
+        "posterName": "leetle leezard two",
+        "text": "meepsie eepsie",
+        "posterBio": "A visitor to this lovely site",
+        "posterImage": "http://images.clipartpanda.com/laughing-smiley-face-clip-art-smiley-face-clip-art10.jpeg",
+        "summary": "meepsie eepsie"
     },
     {
-        "text": "This is *another* comment",
-        "author": "Jordan Walke"
+        "posterName": "leetle leezard one",
+        "text": "meeps eeps",
+        "posterBio": "A visitor to this lovely site",
+        "posterImage": "http://images.clipartpanda.com/laughing-smiley-face-clip-art-smiley-face-clip-art10.jpeg",
+        "summary": "meeps eeps"
     },
     {
-        "text": "Testing",
-        "author": "Zach"
+        "posterName": "Zach Wood-Doughty",
+        "text": "Earlier, the space agency released the most detailed picture yet as it hurtled towards the dwarf planet on Tuesday. The probe was set to grab more images and other data as it passed just 12,500km from the little world at 11:50 GMT (12:50 BST). The spacecraft is currently out of contact with Earth as it continues its observations.",
+        "posterBio": "A visitor to this lovely site",
+        "posterImage": "http://images.clipartpanda.com/laughing-smiley-face-clip-art-smiley-face-clip-art10.jpeg",
+        "summary": "Earlier, the space agency released the most detailed picture yet as it hurtled towards the dwarf pla"
     },
     {
-        "text": "I love leetle leezards",
-        "author": "Milana"
+        "text": "This is a tragic but interesting juxtaposition of gender and poverty. Amira El Feky, a former academic who has researched this topic, explains: 'All the privileges that men have -- they can have them. They mock the whole idea of gender, they say: 'Oh you think women are weak? Well I'm just not going to be a woman any more.''",
+        "posterBio": "I like to read historical non-fiction and think about the big picture",
+        "posterImage": "https://media.licdn.com/mpr/mpr/shrinknp_400_400/p/2/000/086/153/2654332.jpg",
+        "summary": "The Cairo streets where girls pretend to be boys",
+        "posterName": "Eddy Chan",
+        "image": "http://i.guim.co.uk/img/static/sys-images/Guardian/Pix/pictures/2015/7/8/1436351410983/The-wide-eyed-bewildered--009.jpg?w=700&q=85&auto=format&sharp=10&s=3acf83df15672f919e5ecf408b980be6"
     },
     {
-        "text": "So do I!",
-        "author": "Zach"
-    },
-    {
-        "text": "Oh yay",
-        "author": "Milana"
-    },
-    {
-        "text": "I love you too",
-        "author": "Zach"
+        "text": "Generations of Russian scientists have spent almost a century fine-tuning preservation techniques that have maintained the look, feel and flexibility of Lenin's body.",
+        "posterBio": "Chemistry teacher; Mother",
+        "posterImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-a7RKRcNXsuNBn5wM97xvZn65Uw8EKkhsMyP8unyhc967wRdj2w",
+        "summary": "Lenin's Body Improves with Age",
+        "posterName": "Tina Koenig",
+        "image": "http://www.scientificamerican.com/sciam/cache/file/7A3E39F2-2EAD-4EE4-94747F056F593160_article.jpg?F9BDE"
     }
 ]

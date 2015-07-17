@@ -14,7 +14,11 @@ from flask import Flask, Response, request
 
 app = Flask(__name__, static_url_path='', static_folder='public')
 app.debug = True
-app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
+# app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
+
+@app.route('/'):
+def root():
+    
 
 @app.route('/comments.json', methods=['GET', 'POST'])
 def comments_handler():
@@ -23,7 +27,7 @@ def comments_handler():
         comments = json.loads(file.read())
 
     if request.method == 'POST':
-        comments.append(request.form.to_dict())
+        comments.insert(0, request.form.to_dict())
 
         with open('comments.json', 'w') as file:
             file.write(json.dumps(comments, indent=4, separators=(',', ': ')))
