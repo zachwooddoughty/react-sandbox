@@ -1,3 +1,5 @@
 secrets.py
 *.swp
 *.pyc
+data/
+node_modules/
